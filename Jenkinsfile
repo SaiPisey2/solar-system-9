@@ -4,12 +4,22 @@ pipeline {
   environment {
     NAME = "solar-system"
     VERSION = "${env.BUILD_ID}-${env.GIT_COMMIT}"
-    IMAGE_REPO = "siddharth67"
+    IMAGE_REPO = "spisey"
     ARGOCD_TOKEN = credentials('argocd-token')
-    GITEA_TOKEN = credentials('gitea-token')
+    // GITEA_TOKEN = credentials('gitea-token')
   }
   
+    
   stages {
+
+    stage('Checkout'){
+        steps {
+            git branch: 'main', 
+            credentialsId: 'jenkins-git', 
+            url: 'https://github.com/SaiPisey2/solar-system-9.git'
+        }
+    }
+
     stage('Unit Tests') {
       steps {
         echo 'Implement unit tests if applicable.'
@@ -24,9 +34,19 @@ pipeline {
         }
       }
 
+    // stage('Push Image') {
+    //   steps {
+    //     withDockerRegistry([credentialsId: "docker-hub", url: ""]) 
+    //     {
+    //       sh 'docker push ${IMAGE_REPO}/${NAME}:${VERSION}'
+    //     }
+    //   }
+    // }
+
     stage('Push Image') {
       steps {
-        withDockerRegistry([credentialsId: "docker-hub", url: ""]) {
+        withDockerRegistry(credentialsId: 'docker-hub', url: 'https://hub.docker.com/repository/docker/spisey/solar-system/general') 
+        {
           sh 'docker push ${IMAGE_REPO}/${NAME}:${VERSION}'
         }
       }
@@ -45,7 +65,7 @@ pipeline {
 
           } else {
             echo 'Repo does not exists - Cloning the repo'
-            sh 'git clone -b feature-gitea http://139.59.21.103:3000/siddharth/gitops-argocd'
+            sh 'git clone -b feature-gitea git@github.com:SaiPisey2/gitops-argocd.git'
           }
         }
       }
@@ -54,7 +74,7 @@ pipeline {
     stage('Update Manifest') {
       steps {
         dir("gitops-argocd/jenkins-demo") {
-          sh 'sed -i "s#siddharth67.*#${IMAGE_REPO}/${NAME}:${VERSION}#g" deployment.yaml'
+          sh 'sed -i "s#spisey.*#${IMAGE_REPO}/${NAME}:${VERSION}#g" deployment.yaml'
           sh 'cat deployment.yaml'
         }
       }
@@ -64,7 +84,7 @@ pipeline {
       steps {
         dir("gitops-argocd/jenkins-demo") {
           sh "git config --global user.email 'jenkins@ci.com'"
-          sh 'git remote set-url origin http://$GITEA_TOKEN@139.59.21.103:3000/siddharth/gitops-argocd'
+          sh 'git remote set-url origin git@github.com:SaiPisey2/gitops-argocd.git'
           sh 'git checkout feature-gitea'
           sh 'git add -A'
           sh 'git commit -am "Updated image version for Build - $VERSION"'
@@ -73,10 +93,10 @@ pipeline {
       }
     }
 
-    stage('Raise PR') {
-      steps {
-        sh "bash pr.sh"
-      }
-    } 
+    // stage('Raise PR') {
+    //   steps {
+    //     sh "bash pr.sh"
+    //   }
+    // } 
   }
 }
