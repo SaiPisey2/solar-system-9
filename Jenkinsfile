@@ -43,14 +43,25 @@ pipeline {
     //   }
     // }
 
-    stage('Push Image') {
-      steps {
-        withDockerRegistry(credentialsId: 'docker-hub', url: 'https://hub.docker.com/repository/docker/spisey/solar-system/general') 
-        {
-          sh 'docker push ${IMAGE_REPO}/${NAME}:${VERSION}'
+    // stage('Push Image') {
+    //   steps {
+    //     withDockerRegistry(credentialsId: 'docker-hub', url: 'https://hub.docker.com/repository/docker/spisey/solar-system/general') 
+    //     {
+    //       sh 'docker push ${IMAGE_REPO}/${NAME}:${VERSION}'
+    //     }
+    //   }
+    // }
+
+    stage('Push the artifacts'){
+           steps{
+                script{
+                    sh '''
+                    echo 'Push to Repo'
+                    docker push ${IMAGE_REPO}/${NAME}:${VERSION}
+                    '''
+                }
+            }
         }
-      }
-    }
 
     stage('Clone/Pull Repo') {
       steps {
