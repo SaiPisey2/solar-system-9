@@ -8,4 +8,4 @@ curl -L \
   https://api.github.com/repos/SaiPisey2/gitops-argocd/pulls \
   -d '{"title":"Amazing new feature","body":"Please pull these awesome changes in!","head":"feature-gitea","base":"main"}'
 
-echo "Success"
+echo "Success only"
