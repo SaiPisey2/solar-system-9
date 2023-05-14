@@ -6,9 +6,9 @@ curl -X 'POST' \
   -H "authorization: $ARGOCD_TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{
-  "assignee": "sai",
+  "assignee": "SaiPisey2",
   "assignees": [
-    "sai-p"
+    "SaiPisey2"
   ],
   "base": "main",
   "body": "Updated deployment specification with a new image version.",
