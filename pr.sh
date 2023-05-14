@@ -2,9 +2,9 @@ echo "Opening a Pull Request"
 
 curl -X 'POST' \
   'https://api.github.com/repos/SaiPisey2/gitops-argocd/pulls' \
-  -H 'accept: application/json' \
+  -H 'accept: application/vnd.github+json' \
   -H "authorization: $ARGOCD_TOKEN" \
-  -H 'Content-Type: application/json' \
+  -H 'Content-Type: application/vnd.github+json' \
   -d '{
   "assignee": "SaiPisey2",
   "assignees": [
