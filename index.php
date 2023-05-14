@@ -24,7 +24,7 @@ echo '<!DOCTYPE html>
 			align-items: center;
 			justify-content: center;
 			background-image: url("./background.png");
-			background-color: lightblue;
+			background-color: green;
 		}
 		
 /* 		.shadow {
